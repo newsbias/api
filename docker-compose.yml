@@ -5,9 +5,11 @@ services:
         image: postgres
     api:
         build: .
-        command: dockerize -wait tcp://db:5432 python manage.py runserver 0.0.0.0:8000
+        command: dockerize -wait tcp://db:5432 gunicorn api.wsgi:application -w 2 -b 0.0.0.0:8000 --reload
         volumes:
             - .:/app:Z
+        environment:
+            - DEBUG=1
         ports:
             - "8000:8000"
         depends_on:

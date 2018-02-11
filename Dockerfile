@@ -16,3 +16,4 @@ ADD Pipfile.lock /app/
 RUN pipenv install
 ADD . /app
 ENTRYPOINT [ "/usr/local/bin/pipenv", "run" ]
+CMD [ "gunicorn", "api.wsgi.application", "-w", "2", "-b", "0.0.0.0:8000" ]

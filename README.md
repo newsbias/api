@@ -1,5 +1,17 @@
 # NewsBias API
 
+**QUICKSTART:** To run the application with Docker, ensure you have
+`docker-compose` installed and simply run:
+
+```sh
+$ docker-compose up -d
+$ docker-compose run api python manage.py migrate
+```
+
+and open your web browser to `http://localhost:8000`.
+
+## Non-Docker workflow
+
 To get set up, first install [`pipenv`](https://github.com/pypa/pipenv). This
 can be done easily with:
 
