@@ -4,10 +4,10 @@ services:
     db:
         image: postgres
     api:
-        build: .
+        build: ..
         command: dockerize -wait tcp://db:5432 gunicorn api.wsgi:application -w 2 -b 0.0.0.0:8000 --reload
         volumes:
-            - .:/app:Z
+            - ..:/app:rw,Z
         environment:
             - DEBUG=1
         ports:

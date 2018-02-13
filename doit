@@ -1,0 +1,29 @@
+#!/bin/bash
+
+set -eo pipefail
+
+run_compose() {
+    if ! which docker-compose &>/dev/null; then
+        echo "error: you don't have docker-compose." 2>&1
+        exit 1
+    fi
+    exec docker-compose -f docker-compose/dev.yml "$@"
+}
+
+case "$1" in
+    "up")
+        run_compose up -d
+        ;;
+    "down")
+        run_compose down
+        ;;
+    "logs")
+        run_compose logs -f
+        ;;
+    "status")
+        run_compose ps
+        ;;
+    *)
+        run_compose run api "$@"
+        ;;
+esac

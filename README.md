@@ -4,8 +4,8 @@
 `docker-compose` installed and simply run:
 
 ```sh
-$ docker-compose up -d
-$ docker-compose run api python manage.py migrate
+$ ./doit up
+$ ./doit python manage.py migrate
 ```
 
 and open your web browser to `http://localhost:8000`.
