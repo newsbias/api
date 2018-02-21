@@ -1,44 +1,39 @@
-from django.contrib.auth.models import User, Group
 from rest_framework import serializers
-from api.api.models import Source, Article, Metric
+from .models import Topic, Resource, Position, Publisher
 
 
-class MetricSerializer(serializers.HyperlinkedModelSerializer):
+class PublisherSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
-        model = Metric
-        fields = ('metric_type', 'metric_value')
-
-
-class SourceWithoutArticlesSerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = Source
+        model = Publisher
         fields = ('url', 'name')
 
 
-class ArticleSerializer(serializers.HyperlinkedModelSerializer):
-    publisher = SourceWithoutArticlesSerializer(read_only=True)
-    metrics = MetricSerializer(many=True, read_only=True)
+class ResourceSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = Resource
+        fields = ('publisher', 'resource_url')
+
+
+class PositionSerializer(serializers.HyperlinkedModelSerializer):
+    resources = ResourceSerializer(many=True)
 
     class Meta:
-        model = Article
-        fields = ('url', 'title', 'article_url',
-                  'cleaned_text', 'cleaned_html', 'publisher',
-                  'metrics')
+        model = Position
+        fields = ('resources',)
 
 
-class SourceSerializer(serializers.HyperlinkedModelSerializer):
+class PositionSummarySerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
-        model = Source
-        fields = ('url', 'name', 'articles')
+        model = Topic
+        fields = ('url', 'summary', 'summary_source')
 
 
-class UserSerializer(serializers.HyperlinkedModelSerializer):
+class TopicSerializer(serializers.HyperlinkedModelSerializer):
+    position = PositionSerializer(read_only=True)
+    positions = PositionSummarySerializer(many=True, read_only=True)
+    summary_source = ResourceSerializer()
+
     class Meta:
-        model = User
-        fields = ('url', 'username', 'email', 'groups')
-
-
-class GroupSerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = Group
-        fields = ('url', 'name')
+        model = Topic
+        fields = ('url', 'summary', 'summary_source',
+                  'related_topics', 'position', 'positions')

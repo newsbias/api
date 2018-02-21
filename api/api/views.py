@@ -1,47 +1,25 @@
-from django.contrib.auth.models import User, Group
 from rest_framework import viewsets
-from api.api.serializers import (
-        UserSerializer, GroupSerializer, ArticleSerializer,
-        SourceSerializer, MetricSerializer)
-from api.api.models import Article, Source, Metric
+from .models import Topic, Resource, Position, Publisher
+from .serializers import (
+        TopicSerializer, ResourceSerializer, PositionSerializer,
+        PublisherSerializer)
 
 
-class UserViewSet(viewsets.ModelViewSet):
-    """
-    API endpoint allowing users to be viewed or edited
-    """
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
+class TopicViewSet(viewsets.ModelViewSet):
+    queryset = Topic.objects.all()
+    serializer_class = TopicSerializer
 
 
-class GroupViewSet(viewsets.ModelViewSet):
-    """
-    API endpoint allowing groups to be viewed or edited
-    """
-    queryset = Group.objects.all()
-    serializer_class = GroupSerializer
+class ResourceViewSet(viewsets.ModelViewSet):
+    queryset = Resource.objects.all()
+    serializer_class = ResourceSerializer
 
 
-class ArticleViewSet(viewsets.ModelViewSet):
-    """
-    API endpoint allowing articles to be viewed or edited
-    """
-    queryset = Article.objects.all()
-    serializer_class = ArticleSerializer
+class PositionViewSet(viewsets.ModelViewSet):
+    queryset = Position.objects.all()
+    serializer_class = PositionSerializer
 
 
-class SourceViewSet(viewsets.ModelViewSet):
-    """
-    API endpoint allowing sources to be viewed or edited
-    """
-    queryset = Source.objects.all()
-    serializer_class = SourceSerializer
-
-
-# TODO a different ViewSet would be better
-class MetricViewSet(viewsets.ModelViewSet):
-    """
-    API endpoint allowing metrics to be viewed or edited
-    """
-    queryset = Metric.objects.all()
-    serializer_class = MetricSerializer
+class PublisherViewSet(viewsets.ModelViewSet):
+    queryset = Publisher.objects.all()
+    serializer_class = PublisherSerializer

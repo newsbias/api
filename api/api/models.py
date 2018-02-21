@@ -1,26 +1,37 @@
 from django.db import models
 
 
-class Source(models.Model):
-    name = models.CharField(max_length=32)
+class Publisher(models.Model):
+    name = models.CharField(max_length=1024)
+
+    def __str__(self):
+        return str(self.name)
 
 
-class Article(models.Model):
-    title = models.CharField(max_length=64)
-    article_url = models.URLField()
-    cleaned_text = models.CharField(max_length=2048)
-    cleaned_html = models.CharField(max_length=4096)
-    publisher = models.ForeignKey(Source, related_name='articles',
-                                  on_delete=models.CASCADE)
+class Resource(models.Model):
+    resource_url = models.CharField(max_length=1024)
+    publisher = models.ForeignKey(Publisher, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return '{}: {}'.format(str(self.publisher), str(self.resource_url))
 
 
-class Metric(models.Model):
-    METRIC_TYPES = (
-        (0, 'Sentiment'),
-        (1, 'Reading time'),
-        # TODO
-    )
-    article = models.ForeignKey(Article, related_name='metrics',
-                                on_delete=models.CASCADE)
-    metric_type = models.IntegerField(choices=METRIC_TYPES)
-    metric_value = models.FloatField()
+class Position(models.Model):
+    resources = models.ManyToManyField(Resource)
+
+
+class Topic(models.Model):
+    summary = models.CharField(max_length=1024)
+    summary_source = models.ForeignKey(Resource, on_delete=models.CASCADE)
+    related_topics = models.ManyToManyField('self', blank=True)
+    position = models.OneToOneField(
+            Position, null=True, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return str(self.summary)
+
+    def positions(self):
+        return self.related_topics.filter(position__isnull=False)
+
+    def is_position(self):
+        return self.position is not None

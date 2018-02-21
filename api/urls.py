@@ -16,30 +16,14 @@ Including another URLconf
 from django.conf import settings
 from django.contrib import admin
 from django.urls import path, include
-from rest_framework import routers
 from rest_framework.schemas import get_schema_view
-from rest_framework.renderers import CoreJSONRenderer
-from api.api import views
-from api.api.renderers import SwaggerRenderer
-
-router = routers.DefaultRouter()
-router.register('users', views.UserViewSet)
-router.register('groups', views.GroupViewSet)
-router.register('articles', views.ArticleViewSet)
-router.register('sources', views.SourceViewSet)
-router.register('metrics', views.MetricViewSet)
-
-schema_view = get_schema_view(
-        title='Newsbias API',
-        renderer_classes=[CoreJSONRenderer, SwaggerRenderer])
+import api.api.routers
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api-auth/', include('rest_framework.urls')),
-    path('schema/', schema_view)
-]
-
-urlpatterns += router.urls
+    path('schema/', get_schema_view()),
+] + api.api.routers.router.urls
 
 if settings.DEBUG:
     from django.contrib.staticfiles.urls import staticfiles_urlpatterns

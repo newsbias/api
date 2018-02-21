@@ -2,15 +2,20 @@ version: '3'
 
 services:
     db:
-        image: postgres
+        image: postgres:10.1
+        volumes:
+            - data-volume:/var/lib/postgresql/data
     api:
         build: ..
         command: dockerize -wait tcp://db:5432 gunicorn api.wsgi:application -w 2 -b 0.0.0.0:8000 --reload
         volumes:
-            - ..:/app:rw,Z
+            - ..:/app:Z
         environment:
             - DEBUG=1
         ports:
             - "8000:8000"
         depends_on:
             - db
+
+volumes:
+    data-volume:
